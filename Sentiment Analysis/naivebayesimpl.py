@@ -13,7 +13,6 @@ from nltk.tokenize import word_tokenize
 from nltk.stem import PorterStemmer
 from nltk.stem.wordnet import WordNetLemmatizer
 from nltk.probability import FreqDist
-from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.naive_bayes import GaussianNB
 
 
@@ -131,9 +130,6 @@ def create_vector(trainreview, dictionary, IDFarray):
 
 # no. of times occurance
 #TF/IDF
-    #tf=TfidfVectorizer()
-    #text_tf= tf.fit_transform(dftrain)
-    #return text_tf[1]
     
     
 
@@ -178,15 +174,3 @@ predicted= model.predict(finaltestdata) # 0:Overcast, 2:Mild
 dfpredicted=pd.DataFrame(predicted)
 
 dfpredicted.to_csv('testpredictionTFIDF.csv')
-#matched=0
-#unmatched=0
-#for i in range (len(predicted)):
-    #if predicted[i]==trainlabel[i]:
-        #matched=matched+1
-    #else:
-        #unmatched=unmatched+1
-#print(matched)
-#print(unmatched) 
-
-#accuracy= (matched/(matched+unmatched))*100
-#print(accuracy)
