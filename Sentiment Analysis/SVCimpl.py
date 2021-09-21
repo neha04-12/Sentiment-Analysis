@@ -141,9 +141,6 @@ trainreview, trainid, trainlabel, testid, testreview, dataframeoftrainreview, da
 #print(testid[:10])
 #print(testreview[:10])
  
-#zipping of columns   
-#testallrec = tuple(zip(testid, testreview))
-
 
 #calling NLTK_processed for train
 filteredtrainreview = NLTK_proccessed(trainreview)
@@ -164,29 +161,40 @@ filteredtestreview = NLTK_proccessed(testreview)
 #calling frequency table of test data
 finaltestdata=create_vector(filteredtestreview, dictionary, IDFarray)
 
+#validation split
+len_traindata = int(len(finaltraindata)*0.7)
+finaltrainingdata = finaltraindata[:len_traindata]
+finaltraininglabel = trainlabel[:len_traindata]
+valdata = finaltraindata[len_traindata:]
+vallabel = trainlabel[len_traindata:]
+
 #training model
 #model = GaussianNB()
 model = svm.SVC()
-model.fit(finaltraindata, trainlabel)
+model.fit(finaltrainingdata, finaltraininglabel)
 
-#predict model
-predicted= model.predict(finaltestdata) # 0:Overcast, 2:Mild
+#validation
+predicted= model.predict(valdata)
+matched=0
+unmatched=0
+for i in range (len(predicted)):
+    if predicted[i]==vallabel[i]:
+        matched=matched+1
+    else:
+        unmatched=unmatched+1
+print(matched)
+print(unmatched) 
+
+accuracy= (matched/(matched+unmatched))*100
+print("validation accuracy", accuracy)
+
+
+
+#predict model for test data
+predicted= model.predict(finaltestdata) 
 #print (predicted)
 #print (trainlabel[8])
 
 dfpredicted=pd.DataFrame(predicted)
 
 dfpredicted.to_csv('testSVCprediction.csv')
-
-#matched=0
-#unmatched=0
-#for i in range (len(predicted)):
-    #if predicted[i]==trainlabel[i]:
-        #matched=matched+1
-    #else:
-        #unmatched=unmatched+1
-#print(matched)
-#print(unmatched) 
-
-#accuracy= (matched/(matched+unmatched))*100
-#print(accuracy)
